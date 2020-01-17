@@ -53,11 +53,26 @@ function bbsCheck(f){
 }//bbsCheck() end
 
 
-function test1(){
-  alert("test1");
-}//test1() end
 
-function test2(){
-  alert("test2");
-}//test2() end
+function pwCheck(f){
+	
+	// 비밀번호가 4글자 이상 입력되었는지 검사
+	var passwd=f.passwd.value;
+	passwd=passwd.trim();
+	if(passwd.length <4){
+		alert("비밀번호 4글자 이상 입력해주세요 ");
+		f.passwd.focus();
+		return false;
+	}
+
+	var message="진행된 내용은 복구되지 않습니다."+ "\n 계속 진행하시겠습니까?";
+	if(confirm(message)){
+		return true;
+	}else{
+		return false;
+	}
+
+	
+}
+
 

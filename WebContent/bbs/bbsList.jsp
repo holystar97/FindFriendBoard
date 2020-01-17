@@ -4,7 +4,7 @@
 
 <!-- 본문시작 bblList.jsp -->
 
-	<h3>* 게시판 목록입니다. *</h3>
+	<h3>* FIND FRIEND LIST *</h3>
 	<p><a href="bbsForm.jsp">[글쓰기]</a></p>
    <table class="table table-hover">
   <tr>
@@ -26,8 +26,15 @@
       dto=list.get(i);
 %>
       <tr>
-       	<td><%=dto.getSubject() %></td>
-       	<td><%=dto.getReadcnt()%></td>
+       	<td style="text-align:left">
+<%
+		for(int n=1; n<=dto.getIndent(); n++){
+		    out.println("<img src='../images/reply.gif'>");
+		  }//for end
+%>       	
+       	
+       	<a href="bbsRead.jsp?bbsno=<%=dto.getBbsno()%>"><%=dto.getSubject() %></td>
+       	<td><%=dto.getReadcnt()%></td>  
        	<td><%=dto.getWname()%></td>
        	<td><%=dto.getRegdt().substring(0,10)%></td>
       </tr>

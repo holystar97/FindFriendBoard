@@ -89,9 +89,161 @@ public ArrayList<BbsDTO> list(){
 		    
 		    return list;
 		
+	}
+	
+
+	public BbsDTO read(int bbsno) {
+		
+		BbsDTO dto = null;
+		try {
+			con=dbopen.getConnection();
+		      sql=new StringBuilder();
+		      sql.append(" SELECT bbsno, wname, subject, content, readcnt, grpno, ip, regdt");
+		      sql.append(" FROM tb_bbsf ");
+		      sql.append(" WHERE bbsno=? ");
+		      
+		      pstmt=con.prepareStatement(sql.toString());
+		      pstmt.setInt(1, bbsno);
+		      
+		      rs=pstmt.executeQuery();
+		      if(rs.next()){
+		        dto=new BbsDTO();
+		        dto.setBbsno(rs.getInt("bbsno"));
+		        dto.setWname(rs.getString("wname"));
+		        dto.setSubject(rs.getString("subject"));
+		        dto.setContent(rs.getString("content"));
+		        dto.setReadcnt(rs.getInt("readcnt"));
+		        dto.setGrpno(rs.getInt("grpno"));
+		        dto.setRegdt(rs.getString("regdt"));
+		        dto.setIp(rs.getString("ip"));
+		      }else {
+		        dto=null;
+		      }//if end
+			
+			
+		}catch(Exception e) {
+			System.out.println("상세보기 실패 : "+ e);
+		}finally {
+			DBClose.close(con,pstmt,rs);
+		}
+		return dto;
 		
 		
 	}
+		
+	public void incrementCnt(int bbsno) {
+		
+		try {
+			con=dbopen.getConnection();
+			sql= new StringBuilder();
+			sql.append(" UPDATE tb_bbsf");
+			sql.append(" SET readcnt= readcnt +1 ");
+			sql.append(" WHERE bbsno=?");
+			pstmt=con.prepareStatement(sql.toString());
+			pstmt.setInt(1, bbsno);
+			pstmt.executeUpdate();
+		}catch(Exception e) {
+			System.out.println("조회수 증가 실패: "+ e);
+		}finally {
+			DBClose.close(con,pstmt);
+		}
+		
+	}
+	
+	
+	public int delete(BbsDTO dto) {
+		  int cnt=0;
+		  try {
+			  con=dbopen.getConnection();
+			  sql=new StringBuilder();
+			  sql.append("DELETE FROM tb_bbsf ");
+			  sql.append(" WHERE bbsno=? and passwd=? ");
+			  pstmt=con.prepareStatement(sql.toString());
+			  pstmt.setInt(1,dto.getBbsno());
+			  pstmt.setString(2,dto.getPasswd());
+			  cnt=pstmt.executeUpdate();
+		  }catch(Exception e){
+			  System.out.println("삭제 실패 : " + e);
+		  }finally {
+			  DBClose.close(con,pstmt,rs);
+		  }
+		  return cnt;
+	  }
+
+	
+	public int reply(BbsDTO dto) {
+		 
+		 int cnt=0;
+		 try { 
+			 con=dbopen.getConnection();
+			 sql=new StringBuilder();
+			 //1) 부모글 정보를 가져오기 (select문)
+			 //( 그룹번호, 들여쓰기 ,글순서 ) 
+			 int grpno=0, indent=0, ansnum=0;
+			 sql.append(" SELECT grpno, indent, ansnum ");
+			 sql.append(" FROM tb_bbsf ");
+			 sql.append(" WHERE bbsno=? ");
+			 
+			 pstmt=con.prepareStatement(sql.toString());
+			 pstmt.setInt(1, dto.getBbsno());
+			 rs=pstmt.executeQuery();
+			 
+			 if(rs.next()) {
+				 // 그룹번호 : 부모 그룹번호 그대로 가져오기 
+				 grpno=rs.getInt("grpno");
+				 // 들여쓰기 :부모 들여쓰기 + 1 
+				 indent=rs.getInt("indent")+1;
+				 // 글 순서 : 부모 글 순서 + 1 
+				 ansnum=rs.getInt("ansnum")+1;
+			 }
+			
+	
+			 //2) 글순서 다시 조정하기 (update문)
+	
+			 sql.delete(0, sql.length());
+			 sql.append(" UPDATE tb_bbsf ");
+			 sql.append(" SET ansnum=ansnum+1 ");
+			 sql.append(" WHERE grpno=? AND ansnum>=? ");
+			 pstmt=con.prepareStatement(sql.toString());
+			 pstmt.setInt(1, grpno);
+			 pstmt.setInt(2, ansnum);
+			 pstmt.executeUpdate();
+			 
+			 //3) 답변글 추가하기  (insert문)
+			 
+			 sql.delete(0, sql.length());
+			 sql.append(" INSERT INTO tb_bbsf(bbsno, wname, subject, content, passwd, ip, grpno, indent, ansnum) ");
+			sql.append(" VALUES ( (select nvl(max(bbsno),0)+1 from tb_bbsf) ");
+			 sql.append(" ,?,?,?,?,?,?,?,? ) ");
+			
+			pstmt=con.prepareStatement(sql.toString());
+			pstmt.setString(1, dto.getWname());
+			pstmt.setString(2, dto.getSubject());
+			pstmt.setString(3, dto.getContent());
+			pstmt.setString(4,dto.getPasswd());
+			pstmt.setString(5,dto.getIp());
+			pstmt.setInt(6,grpno);
+			pstmt.setInt(7,indent);
+			pstmt.setInt(8,ansnum);
+		
+			cnt=pstmt.executeUpdate();
+				 
+			 
+		 }catch(Exception e){
+			  System.out.println("답변 실패 : " + e);
+		 
+		 }finally {
+			  DBClose.close(con,pstmt,rs);
+		 
+		 }
+		 
+		 
+		 return cnt;
+		 
+	 }
+	 
+	
+	
 	
 	
 	
