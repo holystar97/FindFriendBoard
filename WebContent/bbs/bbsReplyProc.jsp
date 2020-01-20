@@ -26,7 +26,7 @@
 	  }else{
 	    out.println("<script>");
 	    out.println("  alert('답변글 입력되었습니다');");
-	    out.println("  location.href='bbsList.jsp'");//목록페이지 이동
+	    out.println("  location.href='bbsList.jsp?col="+col+"&word="+word+"&nowPage="+nowPage+"'");
 	    out.println("</script>");
 	  }//if end
 	

@@ -36,3 +36,20 @@ values(
 
 --행갯수
 select count(*) from tb_bbs;
+
+--조회수 증가 
+
+update tb_bbs set readcnt=readcnt+1 where bbsno=? 
+
+
+
+-- 행삭제 
+delete from tb_bbs
+where bbsno=? and passwd=?
+
+
+--검색 
+--제목에 '무궁화'가 포함된 행을 조회하시오 
+
+select subject from tb_bbs where subject like '%무궁화%'; 
+

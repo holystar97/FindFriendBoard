@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ include file="../header.jsp"%>
+<%@ include file="ssi.jsp"%>
 <!-- 본문시작 bbsReply.jsp-->
 <h3>*글쓰기*</h3>
 <p><a href="bbsList.jsp">[글목록]</a></p>
@@ -13,6 +14,23 @@
 <input type="hidden"
        name="bbsno"
        value="<%=request.getParameter("bbsno")%>">   
+       
+<!-- 현재 페이지 유지하기 위해서  -->
+<input type="hidden"
+       name="nowPage"
+       value="<%=nowPage%>">
+
+
+<input type="hidden"
+       name="col"
+       value="<%=col%>">  
+
+<input type="hidden"
+       name="word"
+       value="<%=word%>"> 
+       
+       
+
     
 <table class="table">
 <tr>

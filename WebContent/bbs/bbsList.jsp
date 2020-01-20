@@ -16,12 +16,18 @@
   
 <%
   //목록
-  ArrayList<BbsDTO> list=dao.list();
+   //검색 목록 (col 칼럼명, word 검색어)
+  //한 페이지당 출력할 글의 행수
+  int recordPerPage=5;
+
+  ArrayList<BbsDTO> list=dao.list(col, word, nowPage, recordPerPage);
+  
   if(list==null){
     out.println("<tr>");
     out.println("  <td colspan='4'><strong>관련 자료 없음!!</td>");
     out.println("</tr>");
   }else{
+	  String today=Utility.getDate();
     for(int i=0; i<list.size(); i++){
       dto=list.get(i);
 %>
@@ -33,13 +39,77 @@
 		  }//for end
 %>       	
        	
-       	<a href="bbsRead.jsp?bbsno=<%=dto.getBbsno()%>"><%=dto.getSubject() %></td>
+       <a href="bbsRead.jsp?col=<%=col%>&word=<%=word%>&nowPage=<%=nowPage%>&bbsno=<%=dto.getBbsno()%>"><%=dto.getSubject()%></a>
+<%
+                 //조회수가 10이상이면 hot이미지 출력
+                 if(dto.getReadcnt()>=10){
+                   out.println("<img src='../images/hot.gif'>");                  
+                 }//if end
+                 
+              // 오늘 작성한 글 제목 뒤에 new 이미지 출력
+              //regdt에서 "년월일" 만 자르기 
+              //->예) 2020-01-20
+			String regdt=dto.getRegdt().substring(0,10);
+            if(regdt.equals(today)){
+            	out.println("<img src='../images/new.gif'>");
+            }
+%>	    
+			
+       
+       	
+       	</td>
        	<td><%=dto.getReadcnt()%></td>  
        	<td><%=dto.getWname()%></td>
        	<td><%=dto.getRegdt().substring(0,10)%></td>
       </tr>
 <%      
     }//for end
+    
+    //글갯수
+    int totalRecord=dao.count(col, word); 
+    out.println("<tr>");
+    out.println("  <td colspan='4' style='text-align: center;'>");
+    out.println("    글갯수 : <strong>");
+    out.println(totalRecord);
+    out.println("    </strong>");
+    out.println("  </td>");
+    out.println("</tr>");  
+    
+%>
+
+<!-- 페이지 리스트 시작 -->
+	<tr>
+		<td colspan="4">
+<%
+		String paging=new Paging().paging(totalRecord, nowPage, recordPerPage, col, word, "bbsList.jsp");
+		out.print(paging);
+%>		
+		</td>
+	</tr>
+	<!-- 페이지 리스트 끝 -->
+
+
+	 <!-- 검색 시작  -->
+    	<td colspan="4" style="text-align: center; height: 50px">
+ 		<form action="bbsList.jsp" onsubmit="return searchCheck(this)">
+ 			<select style="color:black" name="col">
+ 				<option value="wname">작성자
+ 				<option value="subject">제목
+ 				<option value="content">내용
+ 				<option value="subject_content">제목+내용
+ 			</select>
+ 			<input style="color:black" type="text" name="word">
+ 			<input style="color:black" type="submit" value="검색">
+ 		</form>	   
+    	</td>
+    
+    <!-- 검색 끝 -->
+	
+
+
+
+
+<%
   }//if end
 %>    
 </table>
