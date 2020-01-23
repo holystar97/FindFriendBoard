@@ -4,8 +4,9 @@
 * 회/원/가/입 *<br><br>
 <form name="regForm"
       method="post"
-      action="memberProc.jsp"
+      action="loginUpdateProc2.jsp"
       onsubmit="return memberCheck(this)" >
+      
 <span style="color:red; font-weight: bold">* 필수입력</span>
 <br>
 <table class="table" style="color:black">
@@ -68,7 +69,7 @@
 </tr>
 <tr>
 	<td colspan="2">
-		<input type="submit" value="회원가입"  class="btn btn-primary"/>
+		<input type="submit" value="확인"  class="btn btn-primary"/>
 		<input type="reset"  value="취소"  class="btn btn-primary"/>
 	</td>
 </tr>

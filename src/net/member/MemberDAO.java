@@ -44,4 +44,92 @@ public class MemberDAO {
 		}
 		return mlevel;
 	}
+	
+	public int duplecateID(String id) {
+		int cnt=0;
+		
+		try {
+			con=dbopen.getConnection();
+			sql=new StringBuilder();
+			sql.append(" SELECT COUNT(id) as cnt");
+			sql.append(" FROM memberf" );
+			sql.append(" WHERE id=?" );
+			pstmt=con.prepareStatement(sql.toString());
+			pstmt.setString(1, id);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				cnt=rs.getInt("cnt");
+			}
+		}catch(Exception e) {
+			System.out.println("아이디 중복 확인 실패: " + e);
+		}finally {
+			DBClose.close(con,pstmt,rs);
+		}
+		return cnt;
+	}
+	
+	
+	public int duplecateEmail(String email) {
+		int cnt=0;
+		
+		try {
+			con=dbopen.getConnection();
+			sql=new StringBuilder();
+			sql.append(" SELECT COUNT(email) as cnt");
+			sql.append(" FROM memberf" );
+			sql.append(" WHERE id=?" );
+			pstmt=con.prepareStatement(sql.toString());
+			pstmt.setString(1, email);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				cnt=rs.getInt("cnt");
+			}
+		}catch(Exception e) {
+			System.out.println("아이디 중복 확인 실패: " + e);
+		}finally {
+			DBClose.close(con,pstmt,rs);
+		}
+		return cnt;
+
+	}	
+	
+	
+	public int join(MemberDTO dto) {
+		int cnt=0;
+		
+		try {
+			con=dbopen.getConnection();
+			sql=new StringBuilder();
+			sql.append(" INSERT INTO memberf (id, passwd, mname, email, tel, zipcode, address1, address2, job, mlevel, mdate) ");
+			sql.append(" VALUES (?,?,?,?,?,?,?,?,?,'A1',sysdate)");
+			
+			
+			pstmt=con.prepareStatement(sql.toString());
+			pstmt.setString(1, dto.getId());
+			pstmt.setString(2, dto.getPasswd());
+			pstmt.setString(3, dto.getMname());
+			pstmt.setString(4,dto.getEmail());
+			pstmt.setString(5,dto.getTel());
+			pstmt.setString(6, dto.getZipcode());
+			pstmt.setString(7,dto.getAddress1());
+			pstmt.setString(8,dto.getAddress2());
+			pstmt.setString(9, dto.getJob());
+		
+			
+			cnt=pstmt.executeUpdate();
+			
+			
+		}catch(Exception e) {
+			System.out.println("등록 실패 : "+ e);
+		}finally {
+			DBClose.close(con,pstmt,rs);
+		}
+		
+		return cnt;
+	} 
+	
+	
+	
+	
+	
 }

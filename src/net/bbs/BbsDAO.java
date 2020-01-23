@@ -416,7 +416,103 @@ public ArrayList<BbsDTO> list(){
 		    }//try end   
 		    return list;
 		  }//list() end  
-		  
 	  
+	  
+	  public BbsDTO update(int bbsno) {
+			 BbsDTO dto=null;
+			    try {
+			    	
+			      con=dbopen.getConnection();
+			      sql=new StringBuilder();
+			      sql.append(" SELECT wname,subject,content,passwd ");
+			      sql.append(" FROM tb_bbsf ");
+			      sql.append(" WHERE bbsno=? ");
+			      
+			      pstmt=con.prepareStatement(sql.toString());
+			      pstmt.setInt(1, bbsno);
+			      
+			      rs=pstmt.executeQuery();
+			      if(rs.next()){
+			        dto=new BbsDTO();
+			        dto.setBbsno(rs.getInt("bbsno"));
+			        dto.setWname(rs.getString("wname"));
+			        dto.setSubject(rs.getString("subject"));
+			        dto.setContent(rs.getString("content"));
+			        dto.setPasswd(rs.getString("passwd"));
+			        
+			      }else {
+			        dto=null;
+			      }//if end
+			    }catch (Exception e) {
+			      System.out.println("수정하기 실패:"+e);
+			    }finally {
+			      DBClose.close(con, pstmt, rs);
+			    }//try end
+			    return dto;
+			  }//read() end
+		 
+	  
+	  
+	  
+	  
+	  public int updateProc(BbsDTO dto) {
+		  int cnt=0;
+		  try {
+			  con=dbopen.getConnection();
+			  sql=new StringBuilder();
+			  sql=new StringBuilder();
+		      sql.append(" UPDATE tb_bbsf ");
+		      sql.append(" SET wname=? ");
+		      sql.append(" ,subject=?, content=?, passwd=? ");
+		      sql.append(" WHERE bbsno=?");
+		      
+			  pstmt=con.prepareStatement(sql.toString());
+				  PreparedStatement pstmt=con.prepareStatement(sql.toString());
+			      pstmt.setString(1,dto.getWname());
+			      pstmt.setString(2, dto.getSubject());
+			      pstmt.setString(3, dto.getContent());
+			      pstmt.setString(4, dto.getPasswd());
+			      pstmt.setInt(5, dto.getBbsno());
+			      
+			      cnt=pstmt.executeUpdate();
+
+			    }catch (Exception e) {
+			      System.out.println("수정실패:"+e);
+			    }finally {
+			      DBClose.close(con, pstmt, rs);
+			    }//try end
+			    
+		  return cnt;
+	  }
+	  
+	  public int check(String bbsno,String passwd) {
+		  
+		  int cnt=0;
+		  try {
+			  con=dbopen.getConnection();
+			  sql=new StringBuilder();
+			  sql.append("SELECT COUNT(passwd) FROM tb_bbsf ");
+			  sql.append(" WHERE bbsno=? and passwd=? ");
+			 
+			  if(bbsno.equals("bbsno")) {
+				  if(passwd.equals("passwd")) {
+					  cnt++;
+				  }
+				  else {
+					  cnt=0;
+				  }
+			  }
+			  
+		  }catch(Exception e){
+			  System.out.println("확인 실패 : " + e);
+		  }finally {
+			  DBClose.close(con,pstmt,rs);
+		  }
+		  return cnt;
+		 
+	  }
+	  
+	  
+	 
 
 }
