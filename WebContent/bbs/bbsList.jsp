@@ -5,6 +5,7 @@
 <!-- 본문시작 bblList.jsp -->
 
 	<h3>* FIND FRIEND LIST *</h3>
+	<h3> ★날마다 가볍게 기쁘게 새롭게 ★ </h3>
 	<p><a href="bbsForm.jsp">[글쓰기]</a></p>
    <table class="table table-hover">
   <tr>

@@ -5,7 +5,7 @@
 	<h3>* 회원정보 수정 *</h3>
 	<p><a href="loginForm.jsp">[로그인]</a></p>
 	
-<form method="post" action="loginUpdateProc.jsp" onsubmit="return pwCheck2(this)">
+<form method="post" action="memberUpdateProc.jsp" onsubmit="return pwCheck2(this)">
 		<table class="table">
 				<tr>
 					<th>비밀번호</th>

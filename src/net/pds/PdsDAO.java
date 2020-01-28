@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import net.bbs.BbsDTO;
 import net.utility.DBClose;
 import net.utility.DBOpen;
+import net.utility.Utility;
 
 public class PdsDAO {
 
@@ -137,13 +139,38 @@ public class PdsDAO {
 	}
 	
 	
-
-
-
-
-
-}
-
+	public int delete(int pdsno,String passwd,String saveDir) {
+		   int cnt=0;
+		    try {
+		      //삭제하고자 하는 파일명을 가져온다
+		      String filename="";
+		      PdsDTO oldDTO=read(pdsno);
+		      if(oldDTO!=null) {
+		        filename=oldDTO.getFilename();
+		      }//if end
+		      
+		      con=dbopen.getConnection();
+		      sql=new StringBuilder();
+		      sql.append(" DELETE FROM tb_pdsf ");            
+		      sql.append(" WHERE pdsno=? AND passwd=? ");
+		      pstmt=con.prepareStatement(sql.toString());
+		      pstmt.setInt(1, pdsno);
+		      pstmt.setString(2, passwd);
+		      cnt=pstmt.executeUpdate();
+		      if(cnt==1) {//테이블에서 행삭제가 성공했으므로
+		                  //첨부된 파일도 삭제
+		        Utility.deleteFile(saveDir, filename);        
+		      }//if end
+		      
+		    }catch(Exception e){
+		      System.out.println("삭제실패:"+e);
+		    }finally {
+		      DBClose.close(con, pstmt);
+		    }//try end
+		    return cnt;
+		  }//delete() end
+	  }
+	
 
 
 

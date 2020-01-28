@@ -155,7 +155,7 @@
 
 <!-- Footer -->
 <footer class="container-fluid bg-4 text-center">
-	Copyright &copy; 2020 MyWeb
+	Copyright &copy; 2020 함께 걷는다 특집
 </footer>
 
 </body>

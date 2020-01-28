@@ -485,23 +485,23 @@ public ArrayList<BbsDTO> list(){
 		  return cnt;
 	  }
 	  
-	  public int check(String bbsno,String passwd) {
-		  
+	  public int check(int bbsno,String passwd) {
+		  BbsDTO dto=null;
 		  int cnt=0;
 		  try {
 			  con=dbopen.getConnection();
 			  sql=new StringBuilder();
-			  sql.append("SELECT COUNT(passwd) FROM tb_bbsf ");
-			  sql.append(" WHERE bbsno=? and passwd=? ");
-			 
-			  if(bbsno.equals("bbsno")) {
-				  if(passwd.equals("passwd")) {
-					  cnt++;
-				  }
-				  else {
-					  cnt=0;
-				  }
-			  }
+			  sql.append("SELECT COUNT(passwd) as cnt ");
+			  sql.append("FROM tb_bbsf " );
+			  sql.append("WHERE bbsno=? and passwd=? ");
+			  pstmt=con.prepareStatement(sql.toString());
+			  pstmt.setInt(1, bbsno);
+			  pstmt.setString(2, passwd);
+			  rs=pstmt.executeQuery();
+			  
+			  if(rs.next()){
+		    	  cnt=rs.getInt("cnt");
+		      }
 			  
 		  }catch(Exception e){
 			  System.out.println("확인 실패 : " + e);

@@ -4,6 +4,7 @@
 <%@ include file="auth.jsp" %>
 <!-- 본문시작 loginForm.jsp -->
 <h3>* 로 그 인 *</h3>
+<h4> <날마다 새롭게 ></h4>
 <%
 	if(s_id.equals("guest") || s_passwd.equals("guest") || s_mlevel.equals("guest")){
 		//로그인을 하지 않은 경우
@@ -30,6 +31,10 @@
       method="post"
       action="loginProc.jsp"
       onsubmit="return loginCheck(this)">
+<input type="hidden"
+       name="id"
+       value="<%=dto.getId()%>"> 
+      
 <table class="table">
 <tr>
   <td>
@@ -59,11 +64,12 @@
 <%
 }else{
   //로그인 성공했다면
+  
   out.println("<strong>" + s_id + "</strong>님");
   out.println("<a href='logout.jsp'>[로그아웃]</a>");
   out.println("<br><br>");
-  out.println("<a href= 'loginUpdate.jsp'>[회원정보수정]</a>");
-  out.println("<a href= 'loginDelete.jsp'>[회원탈퇴]</a>");
+  out.println("<a href= 'memberUpdate.jsp'>[회원정보수정]</a>");
+  out.println("<a href= 'memberDelete.jsp'>[회원탈퇴]</a>");
 }//if end
 %>  
 <!-- 본문끝 -->

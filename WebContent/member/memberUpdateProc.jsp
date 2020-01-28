@@ -1,19 +1,47 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ include file="../header.jsp"%>
+<%@ include file="ssi.jsp" %>
 <!-- 본문 시작 memberForm.jsp-->
 * 회/원/가/입 *<br><br>
 <form name="regForm"
       method="post"
-      action="loginUpdateProc2.jsp"
+      action="memberUpdateProc2.jsp"
       onsubmit="return memberCheck(this)" >
       
 <span style="color:red; font-weight: bold">* 필수입력</span>
 <br>
+
+
+
+  <%
+  	String passwd =request.getParameter("passwd").trim(); 
+  	String id =request.getParameter("id").trim(); 
+	dto.setPasswd(passwd);
+	dto.setId(id);
+	int check=0;
+	if(dao.check(passwd)==0){
+	 	
+		out.println("수정에 실패했습니다");
+	}
+	else{
+
+	
+	MemberDTO update=dao.update(id);
+	dto=update;
+	
+	}
+	
+%>
+
+
+
+
 <table class="table" style="color:black">
+
 <tr>
 	<th>*아이디</th>
 	<td>
-      <input type="text" name="id" id="id" size="15"  readonly>
+      <input type="text" name="id" id="id" size="15" value=<%=dto.getId()%> readonly>
       <input type="button" value="ID중복확인" onclick="idCheck()">	
 	</td>
 </tr>
@@ -27,7 +55,7 @@
 </tr>
 <tr>
 	<th>*이름</th>
-	<td><input type="text" name="mname" id="mname" size="15" required></td>
+	<td><input type="text" name="mname" id="mname" size="15"  required></td>
 </tr>
 <tr>
 	<th>*이메일</th>

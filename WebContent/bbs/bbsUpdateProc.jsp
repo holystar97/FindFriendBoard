@@ -16,7 +16,7 @@
   value="<%=request.getParameter("bbsno")%>">  
   
   <%
-  String passwd =request.getParameter("passwd").trim();
+  	String passwd =request.getParameter("passwd").trim();
 	int bbsno     =Integer.parseInt(request.getParameter("bbsno"));  
 	
 	dto.setPasswd(passwd);
@@ -24,11 +24,10 @@
 	
 
 	int check=0;
-	if(dao.check(bbsno,passwd)==0){%>
+	if(dao.check(bbsno,passwd)==0){
 	 	
-		<h2>수정에 실패했습니다</h2>
-	
-<%
+		out.println("수정에 실패했습니다");
+	}
 	else{
 
 	

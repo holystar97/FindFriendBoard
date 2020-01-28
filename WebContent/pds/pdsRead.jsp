@@ -37,7 +37,9 @@
 			<td><%=dto.getRegdate().substring(0,10)%></td>
 		</tr>
 	</table>
-
+	<br>
+	  <input type="button" class="btn btn-primary"  value="수정" onclick="location.href='pdsUpdate.jsp?pdsno=<%=pdsno%>'">
+	  <input type="button" class="btn btn-primary"  value="삭제" onclick="location.href='pdsDel.jsp?pdsno=<%=pdsno%>'">	 
 <%
 	  }
 %>
